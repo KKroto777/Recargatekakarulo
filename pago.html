@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Datos de tarjeta</title>
+    <meta name="description" content="Ingresá los datos de tu tarjeta para simular el pago." />
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./script.js"></script>
+  </head>
+
+  <body>
+    <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+
+    <main class="app">
+      <header class="app__header">
+        <h1 class="app__title">Confirmar pago</h1>
+        <p class="app__subtitle">
+          Estás pagando una carga para <strong id="pagoEmpresa">—</strong>.
+        </p>
+        <p class="hero__amount" id="pagoResumen" hidden></p>
+      </header>
+
+      <section class="panel" aria-label="Formulario de pago">
+        <form id="formPago" class="form" novalidate>
+          <label class="field">
+            <span class="field__label">Nombre y apellido</span>
+            <input
+              id="nombre"
+              name="nombre"
+              class="input"
+              type="text"
+              autocomplete="cc-name"
+              placeholder="Ingresar nombre y apellido"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span class="field__label">Número de tarjeta</span>
+            <input
+              id="tarjeta"
+              name="tarjeta"
+              class="input"
+              type="text"
+              inputmode="numeric"
+              autocomplete="cc-number"
+              placeholder="XXXX XXXX XXXX XXXX"
+              required
+            />
+          </label>
+
+          <div class="field" style="grid-template-columns: 1.3fr 1fr; display: grid; gap: 10px;">
+            <label>
+              <span class="field__label">Vencimiento</span>
+              <input
+                id="vencimiento"
+                name="vencimiento"
+                class="input"
+                type="text"
+                inputmode="numeric"
+                autocomplete="cc-exp"
+                placeholder="MM/AA"
+                required
+              />
+            </label>
+            <label>
+              <span class="field__label">CVV</span>
+              <input
+                id="cvv"
+                name="cvv"
+                class="input"
+                type="password"
+                inputmode="numeric"
+                autocomplete="cc-csc"
+                placeholder="***"
+                required
+              />
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="btnPagar" class="btn btn--primary" type="submit">
+              Confirmar pago
+            </button>
+          </div>
+
+          <div id="mensajePago" class="toast" role="status" aria-live="polite" hidden></div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

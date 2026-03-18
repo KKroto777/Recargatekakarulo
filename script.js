@@ -49,6 +49,20 @@ function isValidTelefono(value) {
   return digits.length >= 8;
 }
 
+function isNonEmpty(value) {
+  return String(value || "").trim().length > 0;
+}
+
+function isLikelyCardNumber(value) {
+  const digits = onlyDigits(value);
+  return digits.length >= 13 && digits.length <= 19;
+}
+
+function isLikelyCvv(value) {
+  const digits = onlyDigits(value);
+  return digits.length === 3 || digits.length === 4;
+}
+
 function setToast(el, { type, text }) {
   el.className = "toast";
   el.classList.add(type === "success" ? "toast--success" : "toast--error");
@@ -106,10 +120,90 @@ function initCargaPage() {
     const empresa = empresaRaw;
     const monto = Number(montoInput.value);
     const telefono = onlyDigits(telefonoInput.value);
-    const url = new URL("./exito.html", window.location.href);
+    const url = new URL("./pago.html", window.location.href);
     url.searchParams.set("empresa", empresa);
     url.searchParams.set("monto", String(monto));
     url.searchParams.set("telefono", telefono);
+    window.location.assign(url.toString());
+  });
+}
+
+function initPagoPage() {
+  const empresaEl = document.getElementById("pagoEmpresa");
+  const resumenEl = document.getElementById("pagoResumen");
+  const form = document.getElementById("formPago");
+  const nombreInput = document.getElementById("nombre");
+  const tarjetaInput = document.getElementById("tarjeta");
+  const vencimientoInput = document.getElementById("vencimiento");
+  const cvvInput = document.getElementById("cvv");
+  const mensajeEl = document.getElementById("mensajePago");
+
+  if (
+    !empresaEl ||
+    !resumenEl ||
+    !form ||
+    !nombreInput ||
+    !tarjetaInput ||
+    !vencimientoInput ||
+    !cvvInput ||
+    !mensajeEl
+  ) {
+    return;
+  }
+
+  const empresaRaw = getEmpresaFromUrl();
+  const montoRaw = getMontoFromUrl();
+  const telRaw = getTelefonoFromUrl();
+
+  empresaEl.textContent = formatEmpresa(empresaRaw);
+
+  const monto = Number(montoRaw);
+  const partesResumen = [];
+  if (Number.isFinite(monto) && monto > 0) partesResumen.push(`Monto: $${monto}`);
+  const tel = onlyDigits(telRaw);
+  if (tel.length >= 8) partesResumen.push(`Teléfono: ${tel}`);
+
+  if (partesResumen.length > 0) {
+    resumenEl.textContent = partesResumen.join(" · ");
+    resumenEl.hidden = false;
+  }
+
+  const validate = () => {
+    const okNombre = isNonEmpty(nombreInput.value);
+    const okTarjeta = isLikelyCardNumber(tarjetaInput.value);
+    const okVenc = isNonEmpty(vencimientoInput.value);
+    const okCvv = isLikelyCvv(cvvInput.value);
+
+    nombreInput.classList.toggle("is-invalid", !okNombre);
+    tarjetaInput.classList.toggle("is-invalid", !okTarjeta);
+    vencimientoInput.classList.toggle("is-invalid", !okVenc);
+    cvvInput.classList.toggle("is-invalid", !okCvv);
+
+    return okNombre && okTarjeta && okVenc && okCvv;
+  };
+
+  [nombreInput, tarjetaInput, vencimientoInput, cvvInput].forEach((input) => {
+    input.addEventListener("input", () => {
+      if (input.value === "") input.classList.remove("is-invalid");
+      else validate();
+    });
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    if (!validate()) {
+      setToast(mensajeEl, {
+        type: "error",
+        text: "Revisá los datos de la tarjeta. Son solo de prueba, no se procesan pagos reales.",
+      });
+      return;
+    }
+
+    const url = new URL("./exito.html", window.location.href);
+    url.searchParams.set("empresa", empresaRaw);
+    url.searchParams.set("monto", String(monto));
+    url.searchParams.set("telefono", tel);
     window.location.assign(url.toString());
   });
 }
@@ -171,6 +265,7 @@ function initExitoPage() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initCargaPage();
+  initPagoPage();
   initExitoPage();
 });
 
