@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¡Carga exitosa!</title>
+    <meta name="description" content="Felicitaciones por tu carga." />
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./script.js"></script>
+  </head>
+
+  <body>
+    <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+
+    <main class="app">
+      <section class="panel panel--center" aria-label="Resultado de la carga">
+        <div class="hero">
+          <div class="hero__badge" aria-hidden="true">✓</div>
+          <h1 class="app__title hero__title">¡Felicitaciones!</h1>
+          <p class="app__subtitle">
+            Tu carga para <strong id="exitoEmpresa">—</strong> se realizó con éxito.
+          </p>
+          <p class="hero__amount" id="exitoMonto" hidden></p>
+
+          <div class="actions actions--center">
+            <a class="btn btn--primary" href="./index.html">Volver al inicio</a>
+            <a class="link" id="reintentarLink" href="./carga.html">Hacer otra carga</a>
+          </div>
+        </div>
+
+        <div id="confetti" class="confetti" aria-hidden="true"></div>
+      </section>
+    </main>
+  </body>
+</html>

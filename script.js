@@ -18,6 +18,12 @@ function getEmpresaFromUrl() {
   return raw;
 }
 
+function getMontoFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const raw = (params.get("monto") || "").trim();
+  return raw;
+}
+
 function formatEmpresa(raw) {
   return EMPRESAS[raw] || "Empresa desconocida";
 }
@@ -71,19 +77,66 @@ function initCargaPage() {
       return;
     }
 
-    setToast(mensajeEl, {
-      type: "success",
-      text: "Carga realizada con éxito",
-    });
-
-    // Simulación: limpiar input para que sea claro que ya se procesó.
-    montoInput.value = "";
-    montoInput.focus();
-    montoInput.classList.remove("is-invalid");
+    const empresa = empresaRaw;
+    const monto = Number(montoInput.value);
+    const url = new URL("./exito.html", window.location.href);
+    url.searchParams.set("empresa", empresa);
+    url.searchParams.set("monto", String(monto));
+    window.location.assign(url.toString());
   });
+}
+
+function initExitoPage() {
+  const empresaEl = document.getElementById("exitoEmpresa");
+  const montoEl = document.getElementById("exitoMonto");
+  const confettiEl = document.getElementById("confetti");
+  const reintentarLink = document.getElementById("reintentarLink");
+
+  if (!empresaEl || !montoEl || !confettiEl || !reintentarLink) return;
+
+  const empresaRaw = getEmpresaFromUrl();
+  empresaEl.textContent = formatEmpresa(empresaRaw);
+  reintentarLink.href = `./carga.html?empresa=${encodeURIComponent(empresaRaw || "")}`;
+
+  const montoRaw = getMontoFromUrl();
+  const monto = Number(montoRaw);
+  if (Number.isFinite(monto) && monto > 0) {
+    montoEl.textContent = `Monto: $${monto}`;
+    montoEl.hidden = false;
+  }
+
+  // Confetti simple con elementos DOM. Sin canvas, sin librerías.
+  // Respeta prefers-reduced-motion: si el usuario lo pidió, no animamos.
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  if (reduceMotion) return;
+
+  const colors = ["#7c5cff", "#22c55e", "#fb7185", "#38bdf8", "#fbbf24", "#a78bfa"];
+  const pieces = 36;
+
+  for (let i = 0; i < pieces; i++) {
+    const piece = document.createElement("span");
+    piece.className = "confetti__piece";
+
+    const left = Math.random() * 100;
+    const dx = (Math.random() * 2 - 1) * 160; // deriva lateral
+    const rot = (Math.random() * 2 - 1) * 520;
+    const duration = 1700 + Math.random() * 1200;
+    const delay = Math.random() * 280;
+
+    piece.style.left = `${left}%`;
+    piece.style.background = colors[i % colors.length];
+    piece.style.setProperty("--dx", `${dx}px`);
+    piece.style.setProperty("--rot", `${rot}deg`);
+    piece.style.animationDuration = `${duration}ms`;
+    piece.style.animationDelay = `${delay}ms`;
+
+    confettiEl.appendChild(piece);
+    piece.addEventListener("animationend", () => piece.remove(), { once: true });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   initCargaPage();
+  initExitoPage();
 });
 
