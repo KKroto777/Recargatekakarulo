@@ -119,13 +119,11 @@ function initExitoPage() {
   const telefonoEl = document.getElementById("exitoTelefono");
   const montoEl = document.getElementById("exitoMonto");
   const confettiEl = document.getElementById("confetti");
-  const reintentarLink = document.getElementById("reintentarLink");
 
-  if (!empresaEl || !telefonoEl || !montoEl || !confettiEl || !reintentarLink) return;
+  if (!empresaEl || !telefonoEl || !montoEl || !confettiEl) return;
 
   const empresaRaw = getEmpresaFromUrl();
   empresaEl.textContent = formatEmpresa(empresaRaw);
-  reintentarLink.href = `./carga.html?empresa=${encodeURIComponent(empresaRaw || "")}`;
 
   const montoRaw = getMontoFromUrl();
   const monto = Number(montoRaw);
