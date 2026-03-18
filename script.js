@@ -24,13 +24,29 @@ function getMontoFromUrl() {
   return raw;
 }
 
+function getTelefonoFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const raw = (params.get("telefono") || "").trim();
+  return raw;
+}
+
 function formatEmpresa(raw) {
   return EMPRESAS[raw] || "Empresa desconocida";
+}
+
+function onlyDigits(value) {
+  return String(value || "").replace(/\D+/g, "");
 }
 
 function isPositiveInteger(value) {
   const n = Number(value);
   return Number.isFinite(n) && n > 0 && Number.isInteger(n);
+}
+
+function isValidTelefono(value) {
+  // Validación básica: no vacío y largo mínimo (8 dígitos).
+  const digits = onlyDigits(value);
+  return digits.length >= 8;
 }
 
 function setToast(el, { type, text }) {
@@ -44,9 +60,10 @@ function initCargaPage() {
   const empresaNombreEl = document.getElementById("empresaNombre");
   const form = document.getElementById("formCarga");
   const montoInput = document.getElementById("monto");
+  const telefonoInput = document.getElementById("telefono");
   const mensajeEl = document.getElementById("mensaje");
 
-  if (!empresaNombreEl || !form || !montoInput || !mensajeEl) return;
+  if (!empresaNombreEl || !form || !montoInput || !telefonoInput || !mensajeEl) return;
 
   const empresaRaw = getEmpresaFromUrl();
   empresaNombreEl.textContent = formatEmpresa(empresaRaw);
@@ -55,14 +72,23 @@ function initCargaPage() {
   // (La validación de empresa no es requisito; solo mostramos el nombre dinámico.)
 
   const validate = () => {
-    const ok = isPositiveInteger(montoInput.value);
-    montoInput.classList.toggle("is-invalid", !ok);
-    return ok;
+    const okTelefono = isValidTelefono(telefonoInput.value);
+    const okMonto = isPositiveInteger(montoInput.value);
+
+    telefonoInput.classList.toggle("is-invalid", !okTelefono);
+    montoInput.classList.toggle("is-invalid", !okMonto);
+
+    return okTelefono && okMonto;
   };
 
   montoInput.addEventListener("input", () => {
     // Validación suave: solo marcamos estado mientras el usuario tipea.
     if (montoInput.value === "") montoInput.classList.remove("is-invalid");
+    else validate();
+  });
+
+  telefonoInput.addEventListener("input", () => {
+    if (telefonoInput.value === "") telefonoInput.classList.remove("is-invalid");
     else validate();
   });
 
@@ -72,27 +98,30 @@ function initCargaPage() {
     if (!validate()) {
       setToast(mensajeEl, {
         type: "error",
-        text: "Ingresá un monto válido (mayor a 0).",
+        text: "Completá teléfono y monto con valores válidos.",
       });
       return;
     }
 
     const empresa = empresaRaw;
     const monto = Number(montoInput.value);
+    const telefono = onlyDigits(telefonoInput.value);
     const url = new URL("./exito.html", window.location.href);
     url.searchParams.set("empresa", empresa);
     url.searchParams.set("monto", String(monto));
+    url.searchParams.set("telefono", telefono);
     window.location.assign(url.toString());
   });
 }
 
 function initExitoPage() {
   const empresaEl = document.getElementById("exitoEmpresa");
+  const telefonoEl = document.getElementById("exitoTelefono");
   const montoEl = document.getElementById("exitoMonto");
   const confettiEl = document.getElementById("confetti");
   const reintentarLink = document.getElementById("reintentarLink");
 
-  if (!empresaEl || !montoEl || !confettiEl || !reintentarLink) return;
+  if (!empresaEl || !telefonoEl || !montoEl || !confettiEl || !reintentarLink) return;
 
   const empresaRaw = getEmpresaFromUrl();
   empresaEl.textContent = formatEmpresa(empresaRaw);
@@ -103,6 +132,13 @@ function initExitoPage() {
   if (Number.isFinite(monto) && monto > 0) {
     montoEl.textContent = `Monto: $${monto}`;
     montoEl.hidden = false;
+  }
+
+  const telRaw = getTelefonoFromUrl();
+  const tel = onlyDigits(telRaw);
+  if (tel.length >= 8) {
+    telefonoEl.textContent = `Teléfono: ${tel}`;
+    telefonoEl.hidden = false;
   }
 
   // Confetti simple con elementos DOM. Sin canvas, sin librerías.

@@ -26,6 +26,21 @@
       <section class="panel" aria-label="Formulario de carga">
         <form id="formCarga" class="form" novalidate>
           <label class="field">
+            <span class="field__label">Número de teléfono</span>
+            <input
+              id="telefono"
+              name="telefono"
+              class="input"
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel"
+              placeholder="Ingresar número"
+              required
+            />
+            <span class="field__hint">Ej: 11 2345 6789 (solo números).</span>
+          </label>
+
+          <label class="field">
             <span class="field__label">Monto (ARS)</span>
             <input
               id="monto"
