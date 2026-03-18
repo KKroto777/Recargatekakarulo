@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cargar saldo</title>
+    <meta name="description" content="Seleccioná tu compañía y cargá saldo." />
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./script.js"></script>
+  </head>
+
+  <body>
+    <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+
+    <main class="app">
+      <header class="app__header">
+        <h1 class="app__title">Cargar saldo</h1>
+        <p class="app__subtitle">Elegí tu compañía para continuar.</p>
+      </header>
+
+      <section class="grid" aria-label="Opciones de compañías">
+        <article class="card" data-empresa="personal">
+          <div class="card__media" aria-hidden="true">
+            <img
+              class="card__img"
+              alt=""
+              src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=60"
+            />
+          </div>
+          <div class="card__content">
+            <h2 class="card__title">Personal</h2>
+            <p class="card__text">Recargá tu línea en segundos.</p>
+            <a class="btn btn--primary" href="./carga.html?empresa=personal">Cargar saldo</a>
+          </div>
+        </article>
+
+        <article class="card" data-empresa="tuenti">
+          <div class="card__media" aria-hidden="true">
+            <img
+              class="card__img"
+              alt=""
+              src="https://images.unsplash.com/photo-1520975958225-31d0f30d36d7?auto=format&fit=crop&w=1200&q=60"
+            />
+          </div>
+          <div class="card__content">
+            <h2 class="card__title">Tuenti</h2>
+            <p class="card__text">Cargá saldo y seguí conectado.</p>
+            <a class="btn btn--primary" href="./carga.html?empresa=tuenti">Cargar saldo</a>
+          </div>
+        </article>
+
+        <article class="card" data-empresa="claro">
+          <div class="card__media" aria-hidden="true">
+            <img
+              class="card__img"
+              alt=""
+              src="https://images.unsplash.com/photo-1510511450818-1c0f77999f28?auto=format&fit=crop&w=1200&q=60"
+            />
+          </div>
+          <div class="card__content">
+            <h2 class="card__title">Claro</h2>
+            <p class="card__text">Recarga rápida, sin vueltas.</p>
+            <a class="btn btn--primary" href="./carga.html?empresa=claro">Cargar saldo</a>
+          </div>
+        </article>
+      </section>
+
+      <footer class="app__footer">
+        <small class="muted">Sitio estático listo para GitHub Pages.</small>
+      </footer>
+    </main>
+  </body>
+</html>

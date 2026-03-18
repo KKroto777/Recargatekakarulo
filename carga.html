@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmar carga</title>
+    <meta name="description" content="Ingresá el monto y confirmá la carga." />
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./script.js"></script>
+  </head>
+
+  <body>
+    <div class="bg-orb bg-orb--1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb--2" aria-hidden="true"></div>
+
+    <main class="app">
+      <header class="app__header">
+        <a class="link" href="./index.html" aria-label="Volver al inicio">← Volver</a>
+        <h1 class="app__title">Confirmar carga</h1>
+        <p class="app__subtitle">
+          Empresa seleccionada:
+          <strong id="empresaNombre">—</strong>
+        </p>
+      </header>
+
+      <section class="panel" aria-label="Formulario de carga">
+        <form id="formCarga" class="form" novalidate>
+          <label class="field">
+            <span class="field__label">Monto (ARS)</span>
+            <input
+              id="monto"
+              name="monto"
+              class="input"
+              type="number"
+              inputmode="numeric"
+              min="1"
+              step="1"
+              placeholder="Ingresar monto"
+              required
+            />
+            <span class="field__hint">Ingresá un monto mayor a 0.</span>
+          </label>
+
+          <div class="actions">
+            <button id="btnConfirmar" class="btn btn--primary" type="submit">
+              Confirmar carga
+            </button>
+          </div>
+
+          <div id="mensaje" class="toast" role="status" aria-live="polite" hidden></div>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
